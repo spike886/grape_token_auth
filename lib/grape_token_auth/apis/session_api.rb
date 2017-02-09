@@ -9,6 +9,12 @@ module GrapeTokenAuth
         end
       end
 
+
+      desc "Sign in #{base.resource_scope.to_s.humanize}"
+      params do
+        requires :email, type: Integer, desc: "#{base.resource_scope.to_s.humanize}'s email"
+        requires :password, type: String, desc: "#{base.resource_scope.to_s.humanize}'s password"
+      end
       base.post '/sign_in' do
         start_time = Time.now
         resource = ResourceFinder.find(base.resource_scope, params)
@@ -32,6 +38,7 @@ module GrapeTokenAuth
         present data: resource
       end
 
+      desc "Sign out #{base.resource_scope.to_s.humanize}"
       base.delete '/sign_out' do
         data = AuthorizerData.load_from_env_or_create(env)
         resource = find_resource(data, base.resource_scope)
